@@ -1,34 +1,69 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title th:text="${user.getUsername()}">User</title>
+    <link th:href="@{css/bootstrap.min.css}" rel="stylesheet">
+    <style>
+        .main-content {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+    </style>
 </head>
 <body>
-<br/>
-<table>
-    <thead>
-    <tr>
-        <th>Welcome, <label th:text="${user.getUsername()}"></label></th>
-    </tr>
-    </thead>
-
-    <tbody>
-    <tr>
-        <td>Your ID:</td>
-        <td><label th:text=" ${user.getId()} "></label></td>
-    </tr>
-    <tr>
-        <td>Your age:</td>
-        <td><label th:text=" ${user.getAge()} "></label></td>
-    </tr>
-    <tr th:each="role : ${user.getRoles()}">
-        <td>Your roles:</td>
-        <td><label th:text=" ${role.getName()} "></label></td>
-    </tr>
-    </tbody>
-</table>ч
-
 <div th:insert="~{logoutFragment :: header}"></div>
+
+<div class="container-fluid" style="display: flex">
+    <div class="bd-aside sticky-xl-top text-muted align-self-start mb-3 mb-xl-5 px-2" style="width: 280px;">
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                <a href="/admin" class="nav-link link-dark">
+                    <svg class="bi me-2" width="16" height="16"></svg>
+                    Администратор
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/user" class="nav-link active">
+                    <svg class="bi me-2" width="16" height="16"></svg>
+                    Пользователь
+                </a>
+            </li>
+        </ul>
+    </div>
+
+        <div class="col-md-10 main-content">
+            <h2 class="fw-semibold mb-4 text-dark">Личный кабинет</h2>
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="fw-medium mb-0">Информация о пользователе</h4>
+                </div>
+
+                <div class="card-body tab-content">
+
+                    <div class="tab-pane fade show active" id="usersTable">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Имя</th>
+                                <th>Возраст</th>
+                                <th>Роли</th>
+                            </tr>
+                            </thead>
+                            <tbody id="usersTableBodyById">
+                            <tr>
+                                <td><label th:text=" ${user.getId()}"></label></td>
+                                <td><label th:text=" ${user.getUsername()}"></label></td>
+                                <td><label th:text=" ${user.getAge()}"></label></td>
+                                <td><label th:each="role, roleStat : ${user.getRoles()}" th:text="${role.getName()} + (${not roleStat.last} ? ', ' : '')"></label></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
 </body>
 </html>

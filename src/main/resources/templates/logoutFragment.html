@@ -3,12 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <title>logout fragment</title>
+    <link th:href="@{css/bootstrap.min.css}" rel="stylesheet">
+    <style>
+        body {
+            min-height: 75rem;
+        }
+    </style>
 </head>
 <body>
-  <div th:fragment="header">
-    <form th:action="@{/logout}" method="POST">
-      <button type="submit">Logout</button>
-    </form>
-  </div>
+<nav th:fragment="header" class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand">
+            <strong th:text="${user.getUsername()}"></strong>
+            <span> with roles: </span>
+            <span th:each="role, roleStat : ${user.getRoles()}" th:text="${role.getName()} + (${not roleStat.last} ? ', ' : '')"></span>
+        </a>
+        <ul class="navbar-nav mb-2 mb-md-0">
+            <li class="nav-item">
+                <form th:action="@{/logout}" method="post">
+                    <a class="nav-link" href="#" onclick="this.closest('form').submit();">
+                        Выйти
+                    </a>
+                </form>
+            </li>
+        </ul>
+
+    </div>
+</nav>
+
+<div th:fragment="sidebar" class="bd-aside sticky-xl-top text-muted align-self-start mb-3 mb-xl-5 px-2" style="width: 280px;">
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+            <a href="/admin" class="nav-link active" aria-current="page">
+                <svg class="bi me-2" width="16" height="16"></svg>
+                Admin
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="/user" class="nav-link link-dark">
+                <svg class="bi me-2" width="16" height="16"></svg>
+                User
+            </a>
+        </li>
+    </ul>
+</div>
+
 </body>
 </html>
