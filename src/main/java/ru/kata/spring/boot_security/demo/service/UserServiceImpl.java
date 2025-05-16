@@ -33,6 +33,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     public void updateUser(int id, User user) {
         user.setId(id);
+        user.setPassword("{noop}" + user.getPassword());
+        if (user.getPassword().equals("{noop}")) {
+            user.setPassword(userRepository.findById(id).get().getPassword());
+        }
         userRepository.save(user);
     }
 
